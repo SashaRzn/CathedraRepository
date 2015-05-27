@@ -15,7 +15,7 @@ namespace CathedraUniversity.Forms
 	{
 		private DatabaseDataContext database = new DatabaseDataContext();
 		private Nullable<short> semestrValue = 1;
-		private bool formStudyValue = false;
+		private bool formStudyValue = true;
 		private int courseTypeValue = 1;
 		private bool isFormClose = false;
 
@@ -36,8 +36,8 @@ namespace CathedraUniversity.Forms
 
 			List<FormStudy> formStudy = new List<FormStudy>()
 			{
-				new FormStudy() { Flag = false, Description = "Очная" }, 
-				new FormStudy() { Flag = true, Description = "Заочная" },
+				new FormStudy() { Flag = true, Description = "Очная" }, 
+				new FormStudy() { Flag = false, Description = "Заочная" },
                 new FormStudy() { Flag = null, Description = "Все" }
 			};
 			bsFormStudy.DataSource = formStudy;
@@ -262,12 +262,18 @@ namespace CathedraUniversity.Forms
                             courseInWork.ID,
                             courseInWork.Course.Name,
                             (courseInWork.Semestr == 1) ? "Осенний" : "Весенний",
-                            (courseInWork.FormStudy == true) ? "Заочная" : "Очная",
+                            (courseInWork.FormStudy == true) ? "Очная" : "Заочная",
                             (courseInWork.Employee != null) ? courseInWork.Employee.ShortName : "",
                             courseInWork.Groups,
                             courseInWork.TotalPlanHours,
                             courseInWork.TotalDistributeHours);
                     }
+
+                    decimal total = (from p in context.LoadInCoursePlan
+                                     where p.CourseInWork.SchoolYearID == schoolYear && p.CourseInWork.Course.CourseTypeId == courseTypeValue
+                                     && p.CourseInWork.FormStudy == formStudyValue && p.CourseInWork.Semestr == semestrValue
+                                     select p.CountHours).Sum();
+                    lblStat.Text = total.ToString();
                 }
                 else
                 {
@@ -281,7 +287,7 @@ namespace CathedraUniversity.Forms
                             courseInWork.ID,
                             courseInWork.Course.Name,
                             (courseInWork.Semestr == 1) ? "Осенний" : "Весенний",
-                            (courseInWork.FormStudy == true) ? "Заочная" : "Очная",
+                            (courseInWork.FormStudy == true) ? "Очная" : "Заочная",
                             (courseInWork.Employee != null) ? courseInWork.Employee.ShortName : "",
                             courseInWork.Groups,
                             courseInWork.TotalPlanHours,

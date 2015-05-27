@@ -152,7 +152,7 @@ namespace CathedraUniversity.Forms
 					courseInWork.Course.Name,
 					courseInWork.Groups,
 					(courseInWork.Semestr == 1) ? "Осенний" : "Весенний",
-					(courseInWork.FormStudy == true) ? "Заочная" : "Очная",
+					(courseInWork.FormStudy == true) ? "Очная" : "Заочная",
 					totalGeneralHours,
 					totalFormHours,
 					totalFactHours,

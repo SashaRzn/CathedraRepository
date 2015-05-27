@@ -47,6 +47,7 @@
             this.lblSemestr = new System.Windows.Forms.Label();
             this.btnMoveFactPart = new System.Windows.Forms.Button();
             this.panelGeneralLoad = new System.Windows.Forms.Panel();
+            this.btnMoveFormAndFactPart = new System.Windows.Forms.Button();
             this.btnMoveToPochFond = new System.Windows.Forms.Button();
             this.panelFormLoad = new System.Windows.Forms.Panel();
             this.btnGoToFactEmployee = new System.Windows.Forms.Button();
@@ -61,7 +62,6 @@
             this.panelPochFondLoad = new System.Windows.Forms.Panel();
             this.btnPochFondGoToEmployee = new System.Windows.Forms.Button();
             this.btnPochFondMakeFormal = new System.Windows.Forms.Button();
-            this.btnMoveFormAndFactPart = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.ctlLoadInCourseFact)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.bsLoadInCourseInFact)).BeginInit();
             this.panelGeneralLoad.SuspendLayout();
@@ -173,7 +173,7 @@
             // btnBack
             // 
             this.btnBack.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnBack.Location = new System.Drawing.Point(872, 280);
+            this.btnBack.Location = new System.Drawing.Point(637, 280);
             this.btnBack.Name = "btnBack";
             this.btnBack.Size = new System.Drawing.Size(75, 23);
             this.btnBack.TabIndex = 3;
@@ -239,6 +239,16 @@
             this.panelGeneralLoad.Size = new System.Drawing.Size(144, 204);
             this.panelGeneralLoad.TabIndex = 9;
             // 
+            // btnMoveFormAndFactPart
+            // 
+            this.btnMoveFormAndFactPart.Location = new System.Drawing.Point(16, 3);
+            this.btnMoveFormAndFactPart.Name = "btnMoveFormAndFactPart";
+            this.btnMoveFormAndFactPart.Size = new System.Drawing.Size(120, 55);
+            this.btnMoveFormAndFactPart.TabIndex = 10;
+            this.btnMoveFormAndFactPart.Text = "Перенести формальную и фактическую часть";
+            this.btnMoveFormAndFactPart.UseVisualStyleBackColor = true;
+            this.btnMoveFormAndFactPart.Click += new System.EventHandler(this.btnMoveFormAndFactPart_Click);
+            // 
             // btnMoveToPochFond
             // 
             this.btnMoveToPochFond.Location = new System.Drawing.Point(16, 152);
@@ -255,9 +265,9 @@
             this.panelFormLoad.Controls.Add(this.btnFormalChangeEmployee);
             this.panelFormLoad.Controls.Add(this.btnMoveToFactEmployee);
             this.panelFormLoad.Controls.Add(this.btnFormalMakeFact);
-            this.panelFormLoad.Location = new System.Drawing.Point(845, 40);
+            this.panelFormLoad.Location = new System.Drawing.Point(611, 48);
             this.panelFormLoad.Name = "panelFormLoad";
-            this.panelFormLoad.Size = new System.Drawing.Size(140, 196);
+            this.panelFormLoad.Size = new System.Drawing.Size(140, 214);
             this.panelFormLoad.TabIndex = 10;
             this.panelFormLoad.Visible = false;
             // 
@@ -307,7 +317,7 @@
             this.panelFactLoad.Controls.Add(this.btnFactChangeEmployee);
             this.panelFactLoad.Controls.Add(this.btnMoveToFormalEmployee);
             this.panelFactLoad.Controls.Add(this.btnFactMakeFormal);
-            this.panelFactLoad.Location = new System.Drawing.Point(817, 93);
+            this.panelFactLoad.Location = new System.Drawing.Point(607, 57);
             this.panelFactLoad.Name = "panelFactLoad";
             this.panelFactLoad.Size = new System.Drawing.Size(144, 208);
             this.panelFactLoad.TabIndex = 11;
@@ -356,14 +366,14 @@
             // 
             this.panelPochFondLoad.Controls.Add(this.btnPochFondGoToEmployee);
             this.panelPochFondLoad.Controls.Add(this.btnPochFondMakeFormal);
-            this.panelPochFondLoad.Location = new System.Drawing.Point(837, 76);
+            this.panelPochFondLoad.Location = new System.Drawing.Point(620, 40);
             this.panelPochFondLoad.Name = "panelPochFondLoad";
             this.panelPochFondLoad.Size = new System.Drawing.Size(140, 180);
             this.panelPochFondLoad.TabIndex = 12;
             // 
             // btnPochFondGoToEmployee
             // 
-            this.btnPochFondGoToEmployee.Location = new System.Drawing.Point(8, 72);
+            this.btnPochFondGoToEmployee.Location = new System.Drawing.Point(9, 77);
             this.btnPochFondGoToEmployee.Name = "btnPochFondGoToEmployee";
             this.btnPochFondGoToEmployee.Size = new System.Drawing.Size(116, 48);
             this.btnPochFondGoToEmployee.TabIndex = 1;
@@ -373,7 +383,7 @@
             // 
             // btnPochFondMakeFormal
             // 
-            this.btnPochFondMakeFormal.Location = new System.Drawing.Point(8, 12);
+            this.btnPochFondMakeFormal.Location = new System.Drawing.Point(9, 25);
             this.btnPochFondMakeFormal.Name = "btnPochFondMakeFormal";
             this.btnPochFondMakeFormal.Size = new System.Drawing.Size(116, 44);
             this.btnPochFondMakeFormal.TabIndex = 0;
@@ -381,21 +391,11 @@
             this.btnPochFondMakeFormal.UseVisualStyleBackColor = true;
             this.btnPochFondMakeFormal.Click += new System.EventHandler(this.btnPochFondMakeFormal_Click);
             // 
-            // btnMoveFormAndFactPart
-            // 
-            this.btnMoveFormAndFactPart.Location = new System.Drawing.Point(16, 3);
-            this.btnMoveFormAndFactPart.Name = "btnMoveFormAndFactPart";
-            this.btnMoveFormAndFactPart.Size = new System.Drawing.Size(120, 55);
-            this.btnMoveFormAndFactPart.TabIndex = 10;
-            this.btnMoveFormAndFactPart.Text = "Перенести формальную и фактическую часть";
-            this.btnMoveFormAndFactPart.UseVisualStyleBackColor = true;
-            this.btnMoveFormAndFactPart.Click += new System.EventHandler(this.btnMoveFormAndFactPart_Click);
-            // 
             // LoadsEmployeeForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(989, 313);
+            this.ClientSize = new System.Drawing.Size(754, 313);
             this.ControlBox = false;
             this.Controls.Add(this.panelPochFondLoad);
             this.Controls.Add(this.panelFactLoad);

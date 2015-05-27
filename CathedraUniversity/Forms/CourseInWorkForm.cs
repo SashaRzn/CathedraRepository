@@ -385,8 +385,8 @@ namespace CathedraUniversity.Forms
 
             List<FormStudy> formStudyList = new List<FormStudy>()
 			{
-				new FormStudy() { Flag = false, Description = "Очная" }, 
-				new FormStudy() { Flag = true, Description = "Заочная" }
+				new FormStudy() { Flag = true, Description = "Очная" }, 
+				new FormStudy() { Flag = false, Description = "Заочная" }
 			};
             bsFormStudyNew.DataSource = formStudyList;
             cbFormStudy.DisplayMember = "Description";
