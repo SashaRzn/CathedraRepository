@@ -27,10 +27,12 @@ namespace CathedraUniversity.Forms
 
 		private void CourseForm_Load(object sender, EventArgs e)
 		{
-			bsCourse.DataSource = database.Course;
+			bsCourseType.DataSource = database.CourseType;
+			bsCourse.DataSource = bsCourseType;
+			bsCourse.DataMember = "Course";
 
-			ctlCourses.DataSource = bsCourse;
 			nvgCourse.BindingSource = bsCourse;
+			nvgCourseType.BindingSource = bsCourseType;
 
 			if (this.Parent != null)
 			{
@@ -52,6 +54,30 @@ namespace CathedraUniversity.Forms
 			database.SubmitChanges();
 			database.Dispose();
 			Close();
+		}
+
+		private void cbCourseType_SelectedIndexChanged(object sender, EventArgs e)
+		{
+		}
+
+		private void ctlCourseType_CellDoubleClick(object sender, DataGridViewCellEventArgs e)
+		{
+			CourseType courseType = (CourseType)bsCourseType.Current;
+			SelectSortLoadInCourseTypeForm formSelectSortLoad = new SelectSortLoadInCourseTypeForm(courseType, database);
+			if (formSelectSortLoad.ShowDialog(this) == DialogResult.OK)
+			{
+				List<int> selectedSortLoads = formSelectSortLoad.SelectedSortLoads;
+
+				database.SortLoadInCourseType.DeleteAllOnSubmit(courseType.SortLoadInCourseType);
+				foreach (int selectSortLoad in selectedSortLoads)
+				{
+					courseType.SortLoadInCourseType.Add( new SortLoadInCourseType()
+					{
+						SortLoadID = selectSortLoad
+					});
+				}
+				database.SubmitChanges();
+			}
 		}
 	}
 }

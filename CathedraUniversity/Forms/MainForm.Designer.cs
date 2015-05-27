@@ -31,10 +31,17 @@
 			this.mainMenu = new System.Windows.Forms.MenuStrip();
 			this.ctlDirectory = new System.Windows.Forms.ToolStripMenuItem();
 			this.ctlDirectoryClassRoom = new System.Windows.Forms.ToolStripMenuItem();
+			this.ctlDirectoryCourse = new System.Windows.Forms.ToolStripMenuItem();
+			this.ctlDirectoryEmployee = new System.Windows.Forms.ToolStripMenuItem();
+			this.ctlDirectoryPost = new System.Windows.Forms.ToolStripMenuItem();
+			this.ctlDirectoryRate = new System.Windows.Forms.ToolStripMenuItem();
+			this.ctlDirectoryGroup = new System.Windows.Forms.ToolStripMenuItem();
 			this.ctlControlLoad = new System.Windows.Forms.ToolStripMenuItem();
+			this.ctlControlLoadCourse = new System.Windows.Forms.ToolStripMenuItem();
+			this.ctlControlLoadEmployee = new System.Windows.Forms.ToolStripMenuItem();
 			this.ctlSettings = new System.Windows.Forms.ToolStripMenuItem();
 			this.ctlExit = new System.Windows.Forms.ToolStripMenuItem();
-			this.ctlDirectoryCourse = new System.Windows.Forms.ToolStripMenuItem();
+			this.ctlDirectorySortLoad = new System.Windows.Forms.ToolStripMenuItem();
 			this.mainMenu.SuspendLayout();
 			this.SuspendLayout();
 			// 
@@ -47,7 +54,7 @@
             this.ctlExit});
 			this.mainMenu.Location = new System.Drawing.Point(0, 0);
 			this.mainMenu.Name = "mainMenu";
-			this.mainMenu.Size = new System.Drawing.Size(594, 24);
+			this.mainMenu.Size = new System.Drawing.Size(873, 24);
 			this.mainMenu.TabIndex = 0;
 			this.mainMenu.Text = "menuStrip1";
 			// 
@@ -55,7 +62,12 @@
 			// 
 			this.ctlDirectory.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.ctlDirectoryClassRoom,
-            this.ctlDirectoryCourse});
+            this.ctlDirectoryCourse,
+            this.ctlDirectoryEmployee,
+            this.ctlDirectoryPost,
+            this.ctlDirectoryRate,
+            this.ctlDirectoryGroup,
+            this.ctlDirectorySortLoad});
 			this.ctlDirectory.Name = "ctlDirectory";
 			this.ctlDirectory.Size = new System.Drawing.Size(94, 20);
 			this.ctlDirectory.Text = "Справочники";
@@ -63,16 +75,67 @@
 			// ctlDirectoryClassRoom
 			// 
 			this.ctlDirectoryClassRoom.Name = "ctlDirectoryClassRoom";
-			this.ctlDirectoryClassRoom.Size = new System.Drawing.Size(176, 22);
+			this.ctlDirectoryClassRoom.Size = new System.Drawing.Size(223, 22);
 			this.ctlDirectoryClassRoom.Text = "Список аудиторий";
 			this.ctlDirectoryClassRoom.Click += new System.EventHandler(this.ctlDirectoryAudience_Click);
 			// 
+			// ctlDirectoryCourse
+			// 
+			this.ctlDirectoryCourse.Name = "ctlDirectoryCourse";
+			this.ctlDirectoryCourse.Size = new System.Drawing.Size(223, 22);
+			this.ctlDirectoryCourse.Text = "Список курсов";
+			this.ctlDirectoryCourse.Click += new System.EventHandler(this.ctlDirectoryCourse_Click);
+			// 
+			// ctlDirectoryEmployee
+			// 
+			this.ctlDirectoryEmployee.Name = "ctlDirectoryEmployee";
+			this.ctlDirectoryEmployee.Size = new System.Drawing.Size(223, 22);
+			this.ctlDirectoryEmployee.Text = "Список преподавателей";
+			this.ctlDirectoryEmployee.Click += new System.EventHandler(this.ctlDirectoryEmployee_Click);
+			// 
+			// ctlDirectoryPost
+			// 
+			this.ctlDirectoryPost.Name = "ctlDirectoryPost";
+			this.ctlDirectoryPost.Size = new System.Drawing.Size(223, 22);
+			this.ctlDirectoryPost.Text = "Список должностей";
+			this.ctlDirectoryPost.Click += new System.EventHandler(this.ctlDirectoryPost_Click);
+			// 
+			// ctlDirectoryRate
+			// 
+			this.ctlDirectoryRate.Name = "ctlDirectoryRate";
+			this.ctlDirectoryRate.Size = new System.Drawing.Size(223, 22);
+			this.ctlDirectoryRate.Text = "Список ставок";
+			this.ctlDirectoryRate.Click += new System.EventHandler(this.ctlDirectoryRate_Click);
+			// 
+			// ctlDirectoryGroup
+			// 
+			this.ctlDirectoryGroup.Name = "ctlDirectoryGroup";
+			this.ctlDirectoryGroup.Size = new System.Drawing.Size(223, 22);
+			this.ctlDirectoryGroup.Text = "Список групп";
+			this.ctlDirectoryGroup.Click += new System.EventHandler(this.ctlDirectoryGroup_Click);
+			// 
 			// ctlControlLoad
 			// 
+			this.ctlControlLoad.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.ctlControlLoadCourse,
+            this.ctlControlLoadEmployee});
 			this.ctlControlLoad.Name = "ctlControlLoad";
 			this.ctlControlLoad.Size = new System.Drawing.Size(144, 20);
 			this.ctlControlLoad.Text = "Управление нагрузкой";
-			this.ctlControlLoad.Click += new System.EventHandler(this.ctlControlLoad_Click);
+			// 
+			// ctlControlLoadCourse
+			// 
+			this.ctlControlLoadCourse.Name = "ctlControlLoadCourse";
+			this.ctlControlLoadCourse.Size = new System.Drawing.Size(182, 22);
+			this.ctlControlLoadCourse.Text = "по курсам";
+			this.ctlControlLoadCourse.Click += new System.EventHandler(this.ctlControlLoadCourse_Click);
+			// 
+			// ctlControlLoadEmployee
+			// 
+			this.ctlControlLoadEmployee.Name = "ctlControlLoadEmployee";
+			this.ctlControlLoadEmployee.Size = new System.Drawing.Size(182, 22);
+			this.ctlControlLoadEmployee.Text = "по преподавателям";
+			this.ctlControlLoadEmployee.Click += new System.EventHandler(this.ctlControlLoadEmployee_Click);
 			// 
 			// ctlSettings
 			// 
@@ -88,18 +151,18 @@
 			this.ctlExit.Text = "Выход";
 			this.ctlExit.Click += new System.EventHandler(this.ctlExit_Click);
 			// 
-			// ctlDirectoryCourse
+			// ctlDirectorySortLoad
 			// 
-			this.ctlDirectoryCourse.Name = "ctlDirectoryCourse";
-			this.ctlDirectoryCourse.Size = new System.Drawing.Size(176, 22);
-			this.ctlDirectoryCourse.Text = "Список курсов";
-			this.ctlDirectoryCourse.Click += new System.EventHandler(this.ctlDirectoryCourse_Click);
+			this.ctlDirectorySortLoad.Name = "ctlDirectorySortLoad";
+			this.ctlDirectorySortLoad.Size = new System.Drawing.Size(208, 22);
+			this.ctlDirectorySortLoad.Text = "Список видов нагрузкок";
+			this.ctlDirectorySortLoad.Click += new System.EventHandler(this.ctlDirectorySortLoad_Click);
 			// 
 			// MainForm
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-			this.ClientSize = new System.Drawing.Size(594, 300);
+			this.ClientSize = new System.Drawing.Size(873, 331);
 			this.Controls.Add(this.mainMenu);
 			this.IsMdiContainer = true;
 			this.MainMenuStrip = this.mainMenu;
@@ -118,10 +181,17 @@
 		private System.Windows.Forms.MenuStrip mainMenu;
 		private System.Windows.Forms.ToolStripMenuItem ctlDirectory;
 		private System.Windows.Forms.ToolStripMenuItem ctlDirectoryClassRoom;
-		private System.Windows.Forms.ToolStripMenuItem ctlExit;
-		private System.Windows.Forms.ToolStripMenuItem ctlControlLoad;
+        private System.Windows.Forms.ToolStripMenuItem ctlExit;
 		private System.Windows.Forms.ToolStripMenuItem ctlSettings;
 		private System.Windows.Forms.ToolStripMenuItem ctlDirectoryCourse;
+        private System.Windows.Forms.ToolStripMenuItem ctlDirectoryEmployee;
+        private System.Windows.Forms.ToolStripMenuItem ctlControlLoad;
+        private System.Windows.Forms.ToolStripMenuItem ctlControlLoadCourse;
+        private System.Windows.Forms.ToolStripMenuItem ctlControlLoadEmployee;
+        private System.Windows.Forms.ToolStripMenuItem ctlDirectoryPost;
+        private System.Windows.Forms.ToolStripMenuItem ctlDirectoryRate;
+        private System.Windows.Forms.ToolStripMenuItem ctlDirectoryGroup;
+		private System.Windows.Forms.ToolStripMenuItem ctlDirectorySortLoad;
 	}
 }
 

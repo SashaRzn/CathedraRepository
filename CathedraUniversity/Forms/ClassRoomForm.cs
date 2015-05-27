@@ -25,11 +25,11 @@ namespace CathedraUniversity.Forms
 			typeClassRoom.Add(1, "Лекционная");
 			typeClassRoom.Add(2, "Лаборатория");
 			typeClassRoom.Add(3, "Лаборатория/Лекционная");
-			ctlSourceSemestr.DataSource = typeClassRoom;
+			bsClassRoomType.DataSource = typeClassRoom;
 
 			ctlSourceClassRoom.DataSource = database.ClassRoom;
 
-			this.typeColumn.DataSource = ctlSourceSemestr;
+			this.typeColumn.DataSource = bsClassRoomType;
 			this.typeColumn.DisplayMember = "Value";
 			this.typeColumn.ValueMember = "Key";
 
@@ -84,5 +84,11 @@ namespace CathedraUniversity.Forms
 				MessageBox.Show("Ошибка работы с базой данных");
 			}
 		}
+
+        private void btnSaveClose_Click(object sender, EventArgs e)
+        {
+            database.SubmitChanges();
+            Close();
+        }
 	}
 }

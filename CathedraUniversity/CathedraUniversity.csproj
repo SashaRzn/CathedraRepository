@@ -12,6 +12,7 @@
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <IsWebBootstrapper>false</IsWebBootstrapper>
+    <TargetFrameworkProfile />
     <PublishUrl>опубликовать\</PublishUrl>
     <Install>true</Install>
     <InstallFrom>Disk</InstallFrom>
@@ -26,7 +27,6 @@
     <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <BootstrapperEnabled>true</BootstrapperEnabled>
-    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -64,12 +64,13 @@
     <Compile Include="Database.cs">
       <DependentUpon>Database.dbml</DependentUpon>
     </Compile>
-    <Compile Include="Forms\Classes\FormStudy.cs" />
     <Compile Include="Database.designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>Database.dbml</DependentUpon>
     </Compile>
+    <Compile Include="Forms\Classes\FormStudy.cs" />
+    <Compile Include="Forms\Classes\Repository.cs" />
     <Compile Include="Forms\Classes\Settings.cs" />
     <Compile Include="Forms\Classes\Utils.cs" />
     <Compile Include="Forms\Classes\WorkLoad.cs" />
@@ -79,11 +80,23 @@
     <Compile Include="Forms\ClassRoomForm.Designer.cs">
       <DependentUpon>ClassRoomForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\ControlLoad.cs">
+    <Compile Include="Forms\ControlLoadCourse.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\ControlLoad.Designer.cs">
-      <DependentUpon>ControlLoad.cs</DependentUpon>
+    <Compile Include="Forms\ControlLoadCourse.Designer.cs">
+      <DependentUpon>ControlLoadCourse.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\ControlLoadEmployee.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\ControlLoadEmployee.Designer.cs">
+      <DependentUpon>ControlLoadEmployee.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\ControlLoadEmployeeEdit.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\ControlLoadEmployeeEdit.Designer.cs">
+      <DependentUpon>ControlLoadEmployeeEdit.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\CourseForm.cs">
       <SubType>Form</SubType>
@@ -97,6 +110,24 @@
     <Compile Include="Forms\CourseInWorkForm.Designer.cs">
       <DependentUpon>CourseInWorkForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\EmployeeForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\EmployeeForm.Designer.cs">
+      <DependentUpon>EmployeeForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\GroupForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\GroupForm.Designer.cs">
+      <DependentUpon>GroupForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\LoadsEmployeeForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\LoadsEmployeeForm.Designer.cs">
+      <DependentUpon>LoadsEmployeeForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\MainForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -109,11 +140,41 @@
     <Compile Include="Forms\PlaningLoadForm.Designer.cs">
       <DependentUpon>PlaningLoadForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\PostForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\PostForm.Designer.cs">
+      <DependentUpon>PostForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\PreferencesForm.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Forms\PreferencesForm.Designer.cs">
       <DependentUpon>PreferencesForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\RateForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\RateForm.Designer.cs">
+      <DependentUpon>RateForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\SelectEmployeeForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\SelectEmployeeForm.Designer.cs">
+      <DependentUpon>SelectEmployeeForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\SelectSortLoadInCourseTypeForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\SelectSortLoadInCourseTypeForm.Designer.cs">
+      <DependentUpon>SelectSortLoadInCourseTypeForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\SortLoadForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\SortLoadForm.Designer.cs">
+      <DependentUpon>SortLoadForm.cs</DependentUpon>
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -123,8 +184,14 @@
     <EmbeddedResource Include="Forms\ClassRoomForm.resx">
       <DependentUpon>ClassRoomForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\ControlLoad.resx">
-      <DependentUpon>ControlLoad.cs</DependentUpon>
+    <EmbeddedResource Include="Forms\ControlLoadCourse.resx">
+      <DependentUpon>ControlLoadCourse.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\ControlLoadEmployee.resx">
+      <DependentUpon>ControlLoadEmployee.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\ControlLoadEmployeeEdit.resx">
+      <DependentUpon>ControlLoadEmployeeEdit.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\CourseForm.resx">
       <DependentUpon>CourseForm.cs</DependentUpon>
@@ -132,14 +199,38 @@
     <EmbeddedResource Include="Forms\CourseInWorkForm.resx">
       <DependentUpon>CourseInWorkForm.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Forms\EmployeeForm.resx">
+      <DependentUpon>EmployeeForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\GroupForm.resx">
+      <DependentUpon>GroupForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\LoadsEmployeeForm.resx">
+      <DependentUpon>LoadsEmployeeForm.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Forms\MainForm.resx">
       <DependentUpon>MainForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\PlaningLoadForm.resx">
       <DependentUpon>PlaningLoadForm.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Forms\PostForm.resx">
+      <DependentUpon>PostForm.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Forms\PreferencesForm.resx">
       <DependentUpon>PreferencesForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\RateForm.resx">
+      <DependentUpon>RateForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\SelectEmployeeForm.resx">
+      <DependentUpon>SelectEmployeeForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\SelectSortLoadInCourseTypeForm.resx">
+      <DependentUpon>SelectSortLoadInCourseTypeForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\SortLoadForm.resx">
+      <DependentUpon>SortLoadForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
@@ -159,6 +250,7 @@
     <None Include="Properties\DataSources\ClassRoom.datasource" />
     <None Include="Properties\DataSources\Course.datasource" />
     <None Include="Properties\DataSources\CourseInWork.datasource" />
+    <None Include="Properties\DataSources\CourseType.datasource" />
     <None Include="Properties\DataSources\DatabaseDataContext.datasource" />
     <None Include="Properties\DataSources\DiplomSettings.datasource" />
     <None Include="Properties\DataSources\Employee.datasource" />

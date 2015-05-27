@@ -20,6 +20,8 @@ namespace CathedraUniversity.Forms
 		private List<WorkLoad> workLoads = new List<WorkLoad>();
 		private List<int> selectedGroups;
 		private CourseInWork currentCourseInWork;
+		private int currentCourseTypeId;
+		private Repository repository = new Repository();
 
         private DatabaseDataContext contextDatabase;
 
@@ -75,17 +77,18 @@ namespace CathedraUniversity.Forms
 
 		#endregion
 
-		public CourseInWorkForm(BindingSource bsSemestr, bool formStudy, DatabaseDataContext database)
+		public CourseInWorkForm(BindingSource bsSemestr, bool formStudy, int courseType, DatabaseDataContext database)
 		{
 			InitializeComponent();
 
+			currentCourseTypeId = courseType;
             contextDatabase = database;
-			InitInterface(bsSemestr, formStudy, database);
+			InitInterface(bsSemestr, formStudy, database, courseType);
 			InitComboboxGroup(database);
 
-
-			var querySortLoad = from c in database.SortLoad
-								select c;
+			var querySortLoad = from c in database.SortLoadInCourseType
+								where c.CourseTypeID == courseType
+								select c.SortLoad;
 			foreach (SortLoad sortLoad in querySortLoad)
 			{
 				workLoads.Add(new WorkLoad()
@@ -102,39 +105,29 @@ namespace CathedraUniversity.Forms
 			ctlSortLoads.Rows.Add("", "Часов всего", 0);
 			int countRows = ctlSortLoads.Rows.Count;
 			ctlSortLoads.Rows[countRows - 1].Cells[2].ReadOnly = true;
+
 		}
 
-		private void InitComboboxGroup(DatabaseDataContext database)
-		{
-			int schoolYearId = Settings.SchoolYearId;
 
-			cbGroup1.DataSource = from g in database.GroupInSemestr
-								  where g.SchoolYear == schoolYearId && g.Semestr == (short)cbSemestr.SelectedValue
-								  select g;
 
-			cbGroup1.DisplayMember = "GroupName";
-			cbGroup1.ValueMember = "ID";
-			cbGroup1.SelectedValue = -1;
-			cbGroup1.AutoCompleteMode = AutoCompleteMode.SuggestAppend;
-			cbGroup1.AutoCompleteSource = AutoCompleteSource.ListItems;
-		}
-
-		public CourseInWorkForm(CourseInWork courseInWork, BindingSource bsSemestr, bool formStudy, DatabaseDataContext database)
+		public CourseInWorkForm(CourseInWork courseInWork, BindingSource bsSemestr, bool formStudy, int courseType, DatabaseDataContext database)
 		{
 			InitializeComponent();
 
+			currentCourseTypeId = courseType;
             contextDatabase = database;
             currentCourseInWork = courseInWork;
 
-			InitInterface(bsSemestr, formStudy, database);
+			InitInterface(bsSemestr, formStudy, database, courseType);
 			cbCourseName.SelectedValue = courseInWork.CourseID;
 			cbEmployee.SelectedValue = (courseInWork.Employee != null) ? courseInWork.EmployeeID : -1;
 			cbSemestr.SelectedValue = courseInWork.Semestr;
 			cbFormStudy.SelectedValue = courseInWork.FormStudy;
 
 			// инициализация списка workLoads
-			var querySortLoad = from c in database.SortLoad
-						select c;
+			var querySortLoad = from c in database.SortLoadInCourseType
+								where c.CourseTypeID == courseType
+								select c.SortLoad;
 			foreach (SortLoad sortLoad in querySortLoad)
 			{
 				workLoads.Add(new WorkLoad()
@@ -163,7 +156,7 @@ namespace CathedraUniversity.Forms
 			ctlSortLoads.Rows.Add("", "Часов всего", courseInWork.TotalPlanHours);
 			int countRows = ctlSortLoads.Rows.Count;
 			ctlSortLoads.Rows[countRows - 1].Cells[2].ReadOnly = true;
-
+			
 			
 			// инициализация групп
 			InitComboboxGroup(database);
@@ -177,6 +170,150 @@ namespace CathedraUniversity.Forms
 				ComboBox comboBox = (ComboBox)panelGroups.Controls[i];
 				comboBox.SelectedValue = courseInWork.GroupInCourse[i].GroupInSemestrID;
 			}
+
+			InitToolTipText();
+			ColorSortLoad();
+		}
+
+		private void InitComboboxGroup(DatabaseDataContext database)
+		{
+			int schoolYearId = Settings.SchoolYearId;
+
+			cbGroup1.DataSource = from g in database.GroupInSemestr
+								  where g.SchoolYear == schoolYearId && g.Semestr == (short)cbSemestr.SelectedValue
+								  select g;
+
+			cbGroup1.DisplayMember = "GroupName";
+			cbGroup1.ValueMember = "ID";
+			cbGroup1.SelectedValue = -1;
+			cbGroup1.AutoCompleteMode = AutoCompleteMode.SuggestAppend;
+			cbGroup1.AutoCompleteSource = AutoCompleteSource.ListItems;
+		}
+
+		/// <summary>
+		/// Метод, добавляющий подсказки в таблицу "Учебная нагрузка" 
+		/// </summary>
+		private void InitToolTipText()
+		{
+			int idSortLoad;
+			using (DatabaseDataContext context = new DatabaseDataContext())
+			{
+				for (int i = 0; i < ctlSortLoads.Rows.Count - 1; i++)
+				{
+					decimal countHours = Decimal.Parse(ctlSortLoads.Rows[i].Cells["countHoursColumn"].Value.ToString());
+					if (countHours > 0)
+					{
+						string stringSortLoad = ctlSortLoads.Rows[i].Cells["idColumn"].Value.ToString();
+						if (Int32.TryParse(stringSortLoad, out idSortLoad) == true)
+						{
+							LoadInCoursePlan loadPlan = (from lp in context.LoadInCoursePlan
+														 where lp.CourseInWorkID == currentCourseInWork.ID && lp.SortLoadID == idSortLoad
+														 select lp).SingleOrDefault();
+							if (loadPlan != null)
+							{
+								if (loadPlan.LoadInCourseFact.Count > 0)
+								{
+									StringBuilder sb = new StringBuilder(100);
+									foreach (LoadInCourseFact loadFact in loadPlan.LoadInCourseFact)
+									{
+										if (loadPlan.ByGroups == false)
+										{
+											if (loadFact.EmployeeFormID == loadFact.EmployeeFactID)
+											{
+												sb.Insert(sb.Length, String.Format("Часов: {0}; Форм. и Факт.: {1}", loadFact.CountHours, loadFact.Employee.ShortName));
+											}
+											else
+											{
+												sb.Insert(sb.Length, String.Format("Часов: {0}; Форм.: {1}; Факт.: {2}", loadFact.CountHours, loadFact.Employee.ShortName, loadFact.Employee1.ShortName));
+											}
+										}
+										else
+										{
+											if (loadFact.EmployeeFormID == loadFact.EmployeeFactID)
+											{
+												sb.Insert(sb.Length, String.Format("Группа:{0} часов: {1}; Форм. и Факт.: {2}",loadFact.GroupInCourse.GroupInSemestr.GroupName, loadFact.CountHours, loadFact.Employee.ShortName));
+											}
+											else
+											{
+												sb.Insert(sb.Length, String.Format("Группа:{0} часов: {1}; Форм.: {2}; Факт.: {3}",loadFact.GroupInCourse.GroupInSemestr.GroupName, loadFact.CountHours, loadFact.Employee.ShortName, loadFact.Employee1.ShortName));
+											}	
+										}
+										if (loadFact.PochFond == true)
+										{
+											sb.Insert(sb.Length, " почас.фонд");
+										}
+										sb.Insert(sb.Length, "\r\n");
+									}
+									string textToolTip = sb.ToString();
+									ctlSortLoads.Rows[i].Cells["sortLoadColumn"].ToolTipText = textToolTip;
+									ctlSortLoads.Rows[i].Cells["countHoursColumn"].ToolTipText = textToolTip;
+								}
+								else
+								{
+									string textToolTip = "Нагрузка не распределена";
+									ctlSortLoads.Rows[i].Cells["sortLoadColumn"].ToolTipText = textToolTip;
+									ctlSortLoads.Rows[i].Cells["countHoursColumn"].ToolTipText = textToolTip;
+								}
+							}
+						}
+					}
+					else
+					{
+						string textToolTip = "Нагрузка не задана";
+						ctlSortLoads.Rows[i].Cells["sortLoadColumn"].ToolTipText = textToolTip;
+						ctlSortLoads.Rows[i].Cells["countHoursColumn"].ToolTipText = textToolTip;
+					}
+				}
+			}
+		}
+
+		/// <summary>
+		/// Метод, окрашивающий	строки таблицы "Учебная нагрузка"
+		/// </summary>
+		private void ColorSortLoad()
+		{
+			int idSortLoad;
+			using (DatabaseDataContext context = new DatabaseDataContext())
+			{
+                CourseInWork courseInWork = (from c in context.CourseInWork
+                                             where c.ID == currentCourseInWork.ID
+                                             select c).SingleOrDefault();
+				for (int i = 0; i < ctlSortLoads.Rows.Count - 1; i++)
+				{
+					decimal countHours = Decimal.Parse(ctlSortLoads.Rows[i].Cells["countHoursColumn"].Value.ToString());
+					if (countHours > 0)
+					{
+						string stringSortLoad = ctlSortLoads.Rows[i].Cells["idColumn"].Value.ToString();
+						if (Int32.TryParse(stringSortLoad, out idSortLoad) == true)
+						{
+                            if (courseInWork.DistributedHoursOnLoad(idSortLoad) == countHours)
+							{
+								ctlSortLoads.Rows[i].Cells["sortLoadColumn"].Style.BackColor = Color.LightGreen;
+                                ctlSortLoads.Rows[i].Cells["countHoursColumn"].Style.BackColor = Color.LightGreen;
+							}
+
+                            if (courseInWork.DistributedHoursOnLoad(idSortLoad) < countHours)
+							{
+								ctlSortLoads.Rows[i].Cells["sortLoadColumn"].Style.BackColor = Color.Yellow;
+								ctlSortLoads.Rows[i].Cells["countHoursColumn"].Style.BackColor = Color.Yellow;
+							}
+
+                            if (courseInWork.DistributedHoursOnLoad(idSortLoad) == 0)
+							{
+								ctlSortLoads.Rows[i].Cells["sortLoadColumn"].Style.BackColor = Color.LightCoral;
+                                ctlSortLoads.Rows[i].Cells["countHoursColumn"].Style.BackColor = Color.LightCoral;
+							}
+						}
+					}
+					else
+					{
+						// нагрузка не назначена (белый цвет)
+						ctlSortLoads.Rows[i].Cells["sortLoadColumn"].Style.BackColor = Color.White;
+						ctlSortLoads.Rows[i].Cells["countHoursColumn"].Style.BackColor = Color.White;
+					}
+				}
+			}
+
 		}
 
 		private void AddComboBoxGroup()
@@ -208,6 +345,7 @@ namespace CathedraUniversity.Forms
 
 		private void btnOK_Click(object sender, EventArgs e)
 		{
+			// сделать проверку полей!
 			courseId = (int)cbCourseName.SelectedValue;
 			employeeId = (cbEmployee.SelectedValue != null) ? (int)cbEmployee.SelectedValue : 0;
 			semestr = (Nullable<short>)cbSemestr.SelectedValue;
@@ -226,11 +364,20 @@ namespace CathedraUniversity.Forms
 			for (int i = 0; i < panelGroups.Controls.Count; i++)
 			{
 				ComboBox comboBox = (ComboBox)panelGroups.Controls[i];
-				selectedGroups.Add((int)comboBox.SelectedValue);
+				if (comboBox.SelectedValue != null)
+				{
+					selectedGroups.Add((int)comboBox.SelectedValue);
+				}
+			}
+			if (selectedGroups.Count == 0)
+			{
+				//ошибка
+				MessageBox.Show("Не назначена группа на курс!");
+				this.DialogResult = DialogResult.None;
 			}
 		}
 
-		private void InitInterface(BindingSource bsSemestr, bool formStudy, DatabaseDataContext database)
+		private void InitInterface(BindingSource bsSemestr, bool formStudy, DatabaseDataContext database, int courseTypeId)
 		{
 			cbSemestr.DisplayMember = "Value";
 			cbSemestr.ValueMember = "Key";
@@ -248,6 +395,7 @@ namespace CathedraUniversity.Forms
             cbFormStudy.SelectedValue = formStudy;
 
 			bsCourse.DataSource = from c in database.Course
+								  where c.CourseTypeId == courseTypeId
 								  orderby c.Name
 								  select c;
 			cbCourseName.DisplayMember = "Name";
@@ -257,9 +405,13 @@ namespace CathedraUniversity.Forms
 			cbCourseName.AutoCompleteMode = AutoCompleteMode.SuggestAppend;
 			cbCourseName.AutoCompleteSource = AutoCompleteSource.ListItems;
 
-			bsEmployee.DataSource = from emp in database.Employee
-									orderby emp.Fio
-									select emp;
+			//bsEmployee.DataSource = from emp in database.Employee
+			//						where emp.NonActive == false
+			//						orderby emp.Fio
+			//						select emp;
+
+			bsEmployee.DataSource = repository.GetFilterEmployee();
+
 			cbEmployee.DisplayMember = "Fio";
 			cbEmployee.ValueMember = "ID";
 			cbEmployee.DataSource = bsEmployee;
@@ -316,6 +468,7 @@ namespace CathedraUniversity.Forms
 			if (formCourse.ShowDialog(this) == DialogResult.OK)
 			{
 				bsCourse.DataSource = from c in contextDatabase.Course
+									  where c.CourseTypeId == currentCourseTypeId
 									  orderby c.Name
 									  select c;	
 			}
@@ -328,20 +481,41 @@ namespace CathedraUniversity.Forms
 			string stringSortLoad = ctlSortLoads.Rows[selRowNum].Cells["idColumn"].Value.ToString();
 			if (Int32.TryParse(stringSortLoad, out idSortLoad) == true)
 			{
+                // проверить существование нагрузки в таблице
 				string nameSortLoad = (string)ctlSortLoads.Rows[selRowNum].Cells["sortLoadColumn"].Value;
-				decimal countHours = (decimal)ctlSortLoads.Rows[selRowNum].Cells["countHoursColumn"].Value;
-				if (countHours > 0)
+				decimal countHours; // = (decimal)ctlSortLoads.Rows[selRowNum].Cells["countHoursColumn"].Value;
+				if (Decimal.TryParse(ctlSortLoads.Rows[selRowNum].Cells["countHoursColumn"].Value.ToString(), out countHours) == true)
 				{
-					PlaningLoadForm formPlaningLoad = new PlaningLoadForm(currentCourseInWork, idSortLoad, nameSortLoad, countHours, contextDatabase);
-					if (formPlaningLoad.ShowDialog(this) == DialogResult.OK)
+					if (currentCourseInWork != null)
 					{
-						List<LoadInCourseFact> listLoadFact = formPlaningLoad.LoadInCourseFacts;
-                        LoadInCoursePlan loadPlan = (from d in contextDatabase.LoadInCoursePlan
-                                           where d.CourseInWorkID == currentCourseInWork.ID && d.SortLoadID == idSortLoad
-                                           select d).SingleOrDefault();
-                        contextDatabase.LoadInCourseFact.DeleteAllOnSubmit(loadPlan.LoadInCourseFact);
-                        loadPlan.LoadInCourseFact.AddRange(listLoadFact);
-                        contextDatabase.SubmitChanges();
+						LoadInCoursePlan workloadPlan = (from c in currentCourseInWork.LoadInCoursePlan
+													 where c.SortLoadID == idSortLoad
+													 select c).SingleOrDefault();
+						if (workloadPlan != null)
+						{
+							PlaningLoadForm formPlaningLoad = new PlaningLoadForm(currentCourseInWork, idSortLoad, nameSortLoad, countHours, contextDatabase);
+							if (formPlaningLoad.ShowDialog(this) == DialogResult.OK)
+							{
+								List<LoadInCourseFact> listLoadFact = formPlaningLoad.LoadInCourseFacts;
+								bool byGroups = formPlaningLoad.ByGroups;
+								LoadInCoursePlan loadPlan = (from d in contextDatabase.LoadInCoursePlan
+															 where d.CourseInWorkID == currentCourseInWork.ID && d.SortLoadID == idSortLoad
+															 select d).SingleOrDefault();
+								loadPlan.ByGroups = byGroups;
+								contextDatabase.LoadInCourseFact.DeleteAllOnSubmit(loadPlan.LoadInCourseFact);
+								loadPlan.LoadInCourseFact.AddRange(listLoadFact);
+								contextDatabase.SubmitChanges();
+
+								InitToolTipText();
+								ColorSortLoad();
+							}
+							else
+							{
+								contextDatabase.SubmitChanges();
+								InitToolTipText();
+								ColorSortLoad();
+							}
+						}
 					}
 				}
 			}
