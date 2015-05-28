@@ -269,11 +269,21 @@ namespace CathedraUniversity.Forms
                             courseInWork.TotalDistributeHours);
                     }
 
-                    decimal total = (from p in context.LoadInCoursePlan
-                                     where p.CourseInWork.SchoolYearID == schoolYear && p.CourseInWork.Course.CourseTypeId == courseTypeValue
-                                     && p.CourseInWork.FormStudy == formStudyValue && p.CourseInWork.Semestr == semestrValue
-                                     select p.CountHours).Sum();
-                    lblStat.Text = total.ToString();
+                    List<LoadInCoursePlan> loadPlanList = (from p in context.LoadInCoursePlan
+                                                           where p.CourseInWork.SchoolYearID == schoolYear && p.CourseInWork.Course.CourseTypeId == courseTypeValue
+                                                           && p.CourseInWork.FormStudy == formStudyValue && p.CourseInWork.Semestr == semestrValue
+                                                           select p).ToList();
+                    if (loadPlanList.Count > 0)
+                    {
+                        decimal totalHours = (from l in loadPlanList
+                                              select l.CountHours).Sum();
+                        lblStat.Text = totalHours.ToString() + " часов";
+                    }
+                    else
+                    {
+                        lblStat.Text = "0 часов";
+                    }
+                    
                 }
                 else
                 {
