@@ -207,7 +207,15 @@ namespace CathedraUniversity
 		{
 			get
 			{
-				return this.ClassRoom.Number;
+                if (this.ClassRoom != null)
+                {
+                    return this.ClassRoom.Number;
+                }
+                else
+                {
+                    return "";
+                }
+				
 			}
 		}
 	}

@@ -106,5 +106,77 @@ namespace CathedraUniversity.Forms
 			formControlLoadEmployeeEdit.ShowDialog();
 			updatedataGridViewEmployeeLoad();
 		}
+
+        private void toolStripGeneralTable_Click(object sender, EventArgs e)
+        {
+            string returnString = "Фамилия".PadRight(30) + "|" +
+                "Должность".PadRight(20) + "|" +
+                "Форм. нагрузка".PadRight(15) + "|" +
+                "Перегрузка".PadRight(10) + "|" +
+                "Недогрузка".PadRight(10) + "|" +
+                "Форм. нагр. по часам".PadRight(20) + "|" +
+                "Форм. ставка".PadRight(12) + "|" +
+                "Факт. нагрузка".PadRight(14) + "|" +
+                "Факт. ставка".PadRight(12) + "|" + "\n";
+
+            decimal workloadForm = 0;
+            decimal overload = 0;
+            decimal underload = 0;
+            decimal rateFormByHours = 0;
+            decimal rateForm = 0;
+            decimal workloadFact = 0;
+            decimal rateFact = 0;
+
+            //var q = from eisy in this.bindingSourceEmployeeInSchoolYear.OfType<EmployeeInSchoolYear>()
+            //        orderby eisy.Post.Id descending
+            //        select eisy;
+
+            List<Employee> employeeList = (from emp in database.Employee
+                                           where emp.NonActive == false
+                                           select emp).ToList();
+
+            foreach (Employee eisy in employeeList)
+            {
+                if (eisy.WorkloadForm != 0 ||
+                    eisy.Overload != 0 ||
+                    eisy.Underload != 0 ||
+                    (decimal)eisy.RateFormByHours != 0 ||
+                    eisy.RateForm != 0 ||
+                    eisy.WorkloadFact != 0 ||
+                    (decimal)eisy.RateFact != 0)
+                {
+                    returnString += eisy.Fio.PadRight(30) + "|" +
+                        eisy.Post.ToString().PadRight(20) + "|" +
+                        eisy.WorkloadForm.ToString().PadLeft(15) + "|" +
+                        eisy.Overload.ToString().PadLeft(10) + "|" +
+                        eisy.Underload.ToString().PadLeft(10) + "|" +
+                        eisy.RateFormByHours.ToString().PadLeft(20) + "|" +
+                        eisy.RateForm.ToString().PadLeft(12) + "|" +
+                        eisy.WorkloadFact.ToString().PadLeft(14) + "|" +
+                        eisy.RateFact.ToString().PadLeft(12) + "|" + "\n";
+
+                    workloadForm += eisy.WorkloadForm;
+                    overload += eisy.Overload;
+                    underload += eisy.Underload;
+                    rateFormByHours += (decimal)eisy.RateFormByHours;
+                    rateForm += eisy.RateForm;
+                    workloadFact += eisy.WorkloadFact;
+                    rateFact += (decimal)eisy.RateFact;
+                }
+            }
+            returnString += "\n";
+            returnString += "ИТОГО: ".PadRight(30) + "|" +
+                    "".PadRight(20) + "|" +
+                    workloadForm.ToString().PadLeft(15) + "|" +
+                    overload.ToString().PadLeft(10) + "|" +
+                    underload.ToString().PadLeft(10) + "|" +
+                    rateFormByHours.ToString().PadLeft(20) + "|" +
+                    rateForm.ToString().PadLeft(12) + "|" +
+                    workloadFact.ToString().PadLeft(14) + "|" +
+                    rateFact.ToString().PadLeft(12) + "|" + "\n";
+
+            EditorForm foemEditor = new EditorForm(returnString);
+            foemEditor.ShowDialog();
+        }
     }
 }
