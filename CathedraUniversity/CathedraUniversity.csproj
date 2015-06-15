@@ -69,6 +69,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Database.dbml</DependentUpon>
     </Compile>
+    <Compile Include="Forms\Classes\CathedraUniversity_Enums.cs" />
     <Compile Include="Forms\Classes\FormStudy.cs" />
     <Compile Include="Forms\Classes\Repository.cs" />
     <Compile Include="Forms\Classes\Settings.cs" />
@@ -176,6 +177,12 @@
     <Compile Include="Forms\SelectSortLoadInCourseTypeForm.Designer.cs">
       <DependentUpon>SelectSortLoadInCourseTypeForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\Service\FormSheduleData.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\Service\FormSheduleData.Designer.cs">
+      <DependentUpon>FormSheduleData.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\SortLoadForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -237,6 +244,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\SelectSortLoadInCourseTypeForm.resx">
       <DependentUpon>SelectSortLoadInCourseTypeForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\Service\FormSheduleData.resx">
+      <DependentUpon>FormSheduleData.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\SortLoadForm.resx">
       <DependentUpon>SortLoadForm.cs</DependentUpon>

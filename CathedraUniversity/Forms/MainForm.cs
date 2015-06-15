@@ -8,6 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using CathedraUniversity.Forms;
+using CathedraUniversity.Forms.Service;
 
 namespace CathedraUniversity
 {
@@ -97,5 +98,11 @@ namespace CathedraUniversity
 			formSortLoad.MdiParent = this;
 			formSortLoad.Show();
 		}
+
+        private void данныеДляРасписанияToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            FormSheduleData fsd = new FormSheduleData();
+            fsd.ShowDialog();
+        }
 	}
 }

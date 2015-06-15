@@ -91,12 +91,13 @@ namespace CathedraUniversity
 		{
 			get
 			{
-				StringBuilder sb = new StringBuilder(50);
+			    string rs = "";
 				foreach (GroupInCourse groupInCourse in this.GroupInCourse)
 				{
-					sb.Insert(sb.Length, groupInCourse.GroupInSemestr.Group.Group1 + " ");
+				    if (!String.IsNullOrEmpty(rs)) rs += ", ";
+				    rs += groupInCourse.GroupInSemestr.Group.Group1;
 				}
-				return sb.ToString();
+				return rs;
 			}
 		}
 
@@ -811,6 +812,20 @@ namespace CathedraUniversity
 			}
 		}
 	}
+
+    partial class SortLoad
+    {
+        public string ShortName
+        {
+            get
+            {
+                if (Id == 1) return "лекции";
+                else if (Id == 7) return "лаб.раб.";
+                else if (Id == 6) return "упр.";
+                else return Name;
+            }
+        }
+    }
 
 
 }
