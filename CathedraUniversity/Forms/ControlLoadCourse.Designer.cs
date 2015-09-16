@@ -30,19 +30,13 @@
 		{
             this.components = new System.ComponentModel.Container();
             this.ctlCourseInWork = new System.Windows.Forms.DataGridView();
-            this.idColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.courseColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.semestrColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.formStudyColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.employeeColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.groupsColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.totalPlanHoursColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.totalDistribHoursColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.bsCourseInWork = new System.Windows.Forms.BindingSource(this.components);
             this.bsGroupInCourse = new System.Windows.Forms.BindingSource(this.components);
             this.bsSemestr = new System.Windows.Forms.BindingSource(this.components);
             this.bsFormStudy = new System.Windows.Forms.BindingSource(this.components);
             this.panel1 = new System.Windows.Forms.Panel();
+            this.buttonReport = new System.Windows.Forms.Button();
+            this.lblStat = new System.Windows.Forms.Label();
             this.cbCourseType = new System.Windows.Forms.ComboBox();
             this.lblCourseType = new System.Windows.Forms.Label();
             this.cbFormStudy = new System.Windows.Forms.ComboBox();
@@ -58,7 +52,14 @@
             this.contextEditCourse = new System.Windows.Forms.ToolStripMenuItem();
             this.contextDeleteCourse = new System.Windows.Forms.ToolStripMenuItem();
             this.bsCourseType = new System.Windows.Forms.BindingSource(this.components);
-            this.lblStat = new System.Windows.Forms.Label();
+            this.idColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.courseColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.semestrColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.formStudyColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.employeeColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.groupsColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.totalPlanHoursColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.totalDistribHoursColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             ((System.ComponentModel.ISupportInitialize)(this.ctlCourseInWork)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.bsCourseInWork)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.bsGroupInCourse)).BeginInit();
@@ -95,66 +96,13 @@
             this.ctlCourseInWork.TabIndex = 1;
             this.ctlCourseInWork.CellMouseDoubleClick += new System.Windows.Forms.DataGridViewCellMouseEventHandler(this.ctlCourseInWork_CellMouseDoubleClick);
             // 
-            // idColumn
-            // 
-            this.idColumn.HeaderText = "ID";
-            this.idColumn.Name = "idColumn";
-            this.idColumn.ReadOnly = true;
-            this.idColumn.Visible = false;
-            // 
-            // courseColumn
-            // 
-            this.courseColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
-            this.courseColumn.HeaderText = "Название курса";
-            this.courseColumn.Name = "courseColumn";
-            this.courseColumn.ReadOnly = true;
-            // 
-            // semestrColumn
-            // 
-            this.semestrColumn.HeaderText = "Семестр";
-            this.semestrColumn.Name = "semestrColumn";
-            this.semestrColumn.ReadOnly = true;
-            this.semestrColumn.Resizable = System.Windows.Forms.DataGridViewTriState.True;
-            // 
-            // formStudyColumn
-            // 
-            this.formStudyColumn.HeaderText = "Форма обучения";
-            this.formStudyColumn.Name = "formStudyColumn";
-            this.formStudyColumn.ReadOnly = true;
-            this.formStudyColumn.Resizable = System.Windows.Forms.DataGridViewTriState.True;
-            // 
-            // employeeColumn
-            // 
-            this.employeeColumn.HeaderText = "Владелец";
-            this.employeeColumn.Name = "employeeColumn";
-            this.employeeColumn.ReadOnly = true;
-            this.employeeColumn.Width = 180;
-            // 
-            // groupsColumn
-            // 
-            this.groupsColumn.HeaderText = "Группы";
-            this.groupsColumn.Name = "groupsColumn";
-            this.groupsColumn.ReadOnly = true;
-            this.groupsColumn.Width = 160;
-            // 
-            // totalPlanHoursColumn
-            // 
-            this.totalPlanHoursColumn.HeaderText = "Всего запланировано часов";
-            this.totalPlanHoursColumn.Name = "totalPlanHoursColumn";
-            this.totalPlanHoursColumn.ReadOnly = true;
-            // 
-            // totalDistribHoursColumn
-            // 
-            this.totalDistribHoursColumn.HeaderText = "Всего распределено часов";
-            this.totalDistribHoursColumn.Name = "totalDistribHoursColumn";
-            this.totalDistribHoursColumn.ReadOnly = true;
-            // 
             // bsCourseInWork
             // 
             this.bsCourseInWork.DataSource = typeof(CathedraUniversity.CourseInWork);
             // 
             // panel1
             // 
+            this.panel1.Controls.Add(this.buttonReport);
             this.panel1.Controls.Add(this.lblStat);
             this.panel1.Controls.Add(this.cbCourseType);
             this.panel1.Controls.Add(this.lblCourseType);
@@ -167,6 +115,26 @@
             this.panel1.Name = "panel1";
             this.panel1.Size = new System.Drawing.Size(1028, 60);
             this.panel1.TabIndex = 3;
+            // 
+            // buttonReport
+            // 
+            this.buttonReport.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.buttonReport.Location = new System.Drawing.Point(752, 15);
+            this.buttonReport.Name = "buttonReport";
+            this.buttonReport.Size = new System.Drawing.Size(256, 23);
+            this.buttonReport.TabIndex = 7;
+            this.buttonReport.Text = "Сводный отчет";
+            this.buttonReport.UseVisualStyleBackColor = true;
+            this.buttonReport.Click += new System.EventHandler(this.buttonReport_Click);
+            // 
+            // lblStat
+            // 
+            this.lblStat.AutoSize = true;
+            this.lblStat.Location = new System.Drawing.Point(835, 23);
+            this.lblStat.Name = "lblStat";
+            this.lblStat.Size = new System.Drawing.Size(0, 13);
+            this.lblStat.TabIndex = 6;
             // 
             // cbCourseType
             // 
@@ -296,13 +264,60 @@
             this.contextDeleteCourse.Text = "Удалить";
             this.contextDeleteCourse.Click += new System.EventHandler(this.contextDeleteCourse_Click);
             // 
-            // lblStat
+            // idColumn
             // 
-            this.lblStat.AutoSize = true;
-            this.lblStat.Location = new System.Drawing.Point(835, 23);
-            this.lblStat.Name = "lblStat";
-            this.lblStat.Size = new System.Drawing.Size(0, 13);
-            this.lblStat.TabIndex = 6;
+            this.idColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
+            this.idColumn.HeaderText = "ID";
+            this.idColumn.Name = "idColumn";
+            this.idColumn.ReadOnly = true;
+            this.idColumn.Width = 43;
+            // 
+            // courseColumn
+            // 
+            this.courseColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.courseColumn.HeaderText = "Название курса";
+            this.courseColumn.Name = "courseColumn";
+            this.courseColumn.ReadOnly = true;
+            // 
+            // semestrColumn
+            // 
+            this.semestrColumn.HeaderText = "Семестр";
+            this.semestrColumn.Name = "semestrColumn";
+            this.semestrColumn.ReadOnly = true;
+            this.semestrColumn.Resizable = System.Windows.Forms.DataGridViewTriState.True;
+            // 
+            // formStudyColumn
+            // 
+            this.formStudyColumn.HeaderText = "Форма обучения";
+            this.formStudyColumn.Name = "formStudyColumn";
+            this.formStudyColumn.ReadOnly = true;
+            this.formStudyColumn.Resizable = System.Windows.Forms.DataGridViewTriState.True;
+            // 
+            // employeeColumn
+            // 
+            this.employeeColumn.HeaderText = "Владелец";
+            this.employeeColumn.Name = "employeeColumn";
+            this.employeeColumn.ReadOnly = true;
+            this.employeeColumn.Width = 180;
+            // 
+            // groupsColumn
+            // 
+            this.groupsColumn.HeaderText = "Группы";
+            this.groupsColumn.Name = "groupsColumn";
+            this.groupsColumn.ReadOnly = true;
+            this.groupsColumn.Width = 160;
+            // 
+            // totalPlanHoursColumn
+            // 
+            this.totalPlanHoursColumn.HeaderText = "Всего запланировано часов";
+            this.totalPlanHoursColumn.Name = "totalPlanHoursColumn";
+            this.totalPlanHoursColumn.ReadOnly = true;
+            // 
+            // totalDistribHoursColumn
+            // 
+            this.totalDistribHoursColumn.HeaderText = "Всего распределено часов";
+            this.totalDistribHoursColumn.Name = "totalDistribHoursColumn";
+            this.totalDistribHoursColumn.ReadOnly = true;
             // 
             // ControlLoadCourse
             // 
@@ -352,6 +367,11 @@
 		private System.Windows.Forms.ToolStripMenuItem contextDeleteCourse;
         private System.Windows.Forms.ToolStripMenuItem contextAddCourse;
         private System.Windows.Forms.ToolStripMenuItem contextEditCourse;
+		private System.Windows.Forms.ComboBox cbCourseType;
+		private System.Windows.Forms.Label lblCourseType;
+		private System.Windows.Forms.BindingSource bsCourseType;
+        private System.Windows.Forms.Label lblStat;
+        private System.Windows.Forms.Button buttonReport;
         private System.Windows.Forms.DataGridViewTextBoxColumn idColumn;
         private System.Windows.Forms.DataGridViewTextBoxColumn courseColumn;
         private System.Windows.Forms.DataGridViewTextBoxColumn semestrColumn;
@@ -360,9 +380,5 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn groupsColumn;
         private System.Windows.Forms.DataGridViewTextBoxColumn totalPlanHoursColumn;
         private System.Windows.Forms.DataGridViewTextBoxColumn totalDistribHoursColumn;
-		private System.Windows.Forms.ComboBox cbCourseType;
-		private System.Windows.Forms.Label lblCourseType;
-		private System.Windows.Forms.BindingSource bsCourseType;
-        private System.Windows.Forms.Label lblStat;
 	}
 }

@@ -4,10 +4,12 @@ using System.ComponentModel;
 using System.Data;
 using System.Drawing;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using CathedraUniversity.Forms.Classes;
+using Microsoft.SqlServer.Server;
 
 namespace CathedraUniversity.Forms
 {
@@ -185,11 +187,16 @@ namespace CathedraUniversity.Forms
 							database.GroupInCourse.DeleteOnSubmit(groupInCourse);
 						}
 						database.SubmitChanges();
+					    var index = 0;
+					    if (ctlCourseInWork.SelectedRows[0] != null)
+					        index = ctlCourseInWork.SelectedRows[0].Index;
 						InitDataGrid();
+                        if (index != 0 )
+                            ctlCourseInWork.Rows[index].Selected = true;
 					}
 					else
 					{
-						InitDataGrid();
+						// InitDataGrid();
 					}
 				}
 			}
@@ -254,6 +261,7 @@ namespace CathedraUniversity.Forms
                     var query = from s in context.CourseInWork
                                 where s.SchoolYearID == schoolYear && s.Semestr == semestrValue
                                 && s.FormStudy == formStudyValue && s.Course.CourseTypeId == courseTypeValue
+                                orderby s.Course.Name
                                 select s;
                     ctlCourseInWork.Rows.Clear();
                     foreach (CourseInWork courseInWork in query)
@@ -289,6 +297,7 @@ namespace CathedraUniversity.Forms
                 {
                     var query = from s in context.CourseInWork
                                 where s.SchoolYearID == schoolYear && s.Semestr == semestrValue && s.Course.CourseTypeId == courseTypeValue
+                                orderby s.Course.Name
                                 select s;
                     ctlCourseInWork.Rows.Clear();
                     foreach (CourseInWork courseInWork in query)
@@ -402,6 +411,40 @@ namespace CathedraUniversity.Forms
         private void ctlCourseInWork_CellMouseDoubleClick(object sender, DataGridViewCellMouseEventArgs e)
         {
             CourseEdit();
+        }
+
+        private void buttonReport_Click(object sender, EventArgs e)
+        {
+			int schoolYear = Settings.SchoolYearId;
+            using (var context = new DatabaseDataContext())
+            {
+                var query = from courseInWork in context.CourseInWork
+                    where courseInWork.SchoolYearID == schoolYear
+                    group courseInWork
+                        by new {courseInWork.Course.CourseType, courseInWork.FormStudy, courseInWork.Semestr}
+                    into ciw
+                    select new {GroupFields = ciw.Key, 
+                        SumTotalPlanHours = ciw.Sum(p1 => p1.LoadInCoursePlan.Sum(p2 => p2.CountHours)),
+                        SumTotalFactHours = (decimal?)ciw.Sum(p1 => p1.LoadInCourseFact.Sum(p2 => p2.CountHours))
+                    };
+                decimal sumplan = 0;
+                decimal sumfact = 0;
+                string ls = "";
+                foreach (var groupRow in query)
+                {
+                    ls += String.Format("{0}, {1}, {2}: план - {3}, факт - {4}", 
+                        groupRow.GroupFields.CourseType.Name, 
+                        (bool) groupRow.GroupFields.FormStudy ? "Очная" : "Заочная",
+                        groupRow.GroupFields.Semestr == 1 ? "Осенний" : "Весенний",
+                        groupRow.SumTotalPlanHours,
+                        groupRow.SumTotalFactHours) + "\r\n";
+                    sumplan += groupRow.SumTotalPlanHours;
+                    sumfact += groupRow.SumTotalFactHours.HasValue ? (decimal)groupRow.SumTotalFactHours : 0;
+                }
+                ls += "ИТОГО:  план - " + sumplan + ", факт - " + sumfact;
+                var ef = new EditorForm(ls);
+                ef.ShowDialog();
+            }
         }
 	}
 }

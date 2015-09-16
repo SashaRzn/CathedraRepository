@@ -503,7 +503,7 @@ namespace CathedraUniversity.Forms
                 if (loadInCourseFacts.Count < ctlPlaningLoads.Rows.Count && loadInCourseFacts.Count > 0)
                 {
                     string textMessage = String.Format("Будет сохранено только {0} из {1} строк", loadInCourseFacts.Count, ctlPlaningLoads.Rows.Count);
-                    if (MessageBox.Show(this, textMessage, "Подтверждение!",
+                    if (MessageBox.Show(this, textMessage, @"Подтверждение!",
                                        MessageBoxButtons.YesNo,
                                        MessageBoxIcon.Question) == DialogResult.Yes)
                     {
@@ -521,8 +521,8 @@ namespace CathedraUniversity.Forms
         private void btnRemoveInfo_Click(object sender, EventArgs e)
         {
             if (MessageBox.Show(this,
-                                    "Вы действительно хотите удалить всю информацию о планировании данной нагрузки?",
-                                    "Подтверждение!",
+                                    @"Вы действительно хотите удалить всю информацию о планировании данной нагрузки?",
+                                    @"Подтверждение!",
                                     MessageBoxButtons.YesNo,
                                     MessageBoxIcon.Question) == DialogResult.Yes)
             {
@@ -594,6 +594,14 @@ namespace CathedraUniversity.Forms
 			ctlPlaningLoads.Rows[e.RowIndex].ErrorText = String.Empty;
 		}
 
-
+        protected override bool ProcessCmdKey(ref Message msg, Keys keyData)
+        {
+            if (keyData == Keys.Escape)
+            {
+                this.Close();
+                return true;
+            }
+            return base.ProcessCmdKey(ref msg, keyData);
+        }
 	}
 }

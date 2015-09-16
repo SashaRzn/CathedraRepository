@@ -65,8 +65,11 @@
             this.formStudyColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.generalLoadColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.formLoadColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.ColumnFormFio = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.factLoadColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.ColumnFactFio = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.pochFondLoadColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.buttonCrossLoadStat = new System.Windows.Forms.Button();
             this.tableLayoutPanel1.SuspendLayout();
             this.panel.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.ctlCourseInWork)).BeginInit();
@@ -399,6 +402,7 @@
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.panel.Controls.Add(this.btnGeneralMove);
+            this.panel.Controls.Add(this.buttonCrossLoadStat);
             this.panel.Controls.Add(this.btnPochFondMove);
             this.panel.Controls.Add(this.btnFactMove);
             this.panel.Controls.Add(this.btnFormMove);
@@ -468,7 +472,9 @@
             this.formStudyColumn,
             this.generalLoadColumn,
             this.formLoadColumn,
+            this.ColumnFormFio,
             this.factLoadColumn,
+            this.ColumnFactFio,
             this.pochFondLoadColumn});
             this.ctlCourseInWork.Location = new System.Drawing.Point(0, 20);
             this.ctlCourseInWork.MultiSelect = false;
@@ -477,6 +483,7 @@
             this.ctlCourseInWork.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.ctlCourseInWork.Size = new System.Drawing.Size(864, 516);
             this.ctlCourseInWork.TabIndex = 0;
+            this.ctlCourseInWork.DoubleClick += new System.EventHandler(this.ctlCourseInWork_DoubleClick);
             // 
             // idColumn
             // 
@@ -527,6 +534,12 @@
             this.formLoadColumn.ReadOnly = true;
             this.formLoadColumn.Width = 80;
             // 
+            // ColumnFormFio
+            // 
+            this.ColumnFormFio.HeaderText = "Закреплена фактическая";
+            this.ColumnFormFio.Name = "ColumnFormFio";
+            this.ColumnFormFio.ReadOnly = true;
+            // 
             // factLoadColumn
             // 
             this.factLoadColumn.HeaderText = "Итого фактической нагрузки";
@@ -534,12 +547,29 @@
             this.factLoadColumn.ReadOnly = true;
             this.factLoadColumn.Width = 80;
             // 
+            // ColumnFactFio
+            // 
+            this.ColumnFactFio.HeaderText = "Закреплена формальная";
+            this.ColumnFactFio.Name = "ColumnFactFio";
+            this.ColumnFactFio.ReadOnly = true;
+            // 
             // pochFondLoadColumn
             // 
             this.pochFondLoadColumn.HeaderText = "Нагрузка в почасовом фонде";
             this.pochFondLoadColumn.Name = "pochFondLoadColumn";
             this.pochFondLoadColumn.ReadOnly = true;
             this.pochFondLoadColumn.Width = 80;
+            // 
+            // buttonCrossLoadStat
+            // 
+            this.buttonCrossLoadStat.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.buttonCrossLoadStat.Location = new System.Drawing.Point(874, 298);
+            this.buttonCrossLoadStat.Name = "buttonCrossLoadStat";
+            this.buttonCrossLoadStat.Size = new System.Drawing.Size(132, 48);
+            this.buttonCrossLoadStat.TabIndex = 3;
+            this.buttonCrossLoadStat.Text = "Статистика перекрестного распределения нагрузки";
+            this.buttonCrossLoadStat.UseVisualStyleBackColor = true;
+            this.buttonCrossLoadStat.Click += new System.EventHandler(this.buttonCrossLoadStat_Click);
             // 
             // ControlLoadEmployeeEdit
             // 
@@ -604,7 +634,10 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn formStudyColumn;
         private System.Windows.Forms.DataGridViewTextBoxColumn generalLoadColumn;
         private System.Windows.Forms.DataGridViewTextBoxColumn formLoadColumn;
+        private System.Windows.Forms.DataGridViewTextBoxColumn ColumnFormFio;
         private System.Windows.Forms.DataGridViewTextBoxColumn factLoadColumn;
+        private System.Windows.Forms.DataGridViewTextBoxColumn ColumnFactFio;
         private System.Windows.Forms.DataGridViewTextBoxColumn pochFondLoadColumn;
+        private System.Windows.Forms.Button buttonCrossLoadStat;
 	}
 }

@@ -4,10 +4,12 @@ using System.ComponentModel;
 using System.Data;
 using System.Data.Linq;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using CathedraUniversity.Forms.Classes;
 
 namespace CathedraUniversity.Forms
 {
@@ -177,6 +179,37 @@ namespace CathedraUniversity.Forms
 
             EditorForm foemEditor = new EditorForm(returnString);
             foemEditor.ShowDialog();
+        }
+
+        private void toolStripButton1_Click(object sender, EventArgs e)
+        {
+            var employee = (Employee)bsEmployee.Current;
+            var sy = (from s in database.SchoolYear
+                where s.ID == Settings.SchoolYearId
+                select s).FirstOrDefault();
+            string info = employee.GetEmployeeInfo(sy);
+            var ef = new EditorForm(info);
+            ef.ShowDialog();
+        }
+
+        private void toolStripButton2_Click(object sender, EventArgs e)
+        {
+            var q = from emp in database.Employee
+                where !emp.NonActive
+                select emp;
+            string alldata = "";
+
+            var sy = (from schoolYear in database.SchoolYear
+                where schoolYear.ID == Settings.SchoolYearId
+                select schoolYear).FirstOrDefault();
+
+            foreach (Employee employee in q)
+            {
+                alldata += employee.GetEmployeeInfo(sy) + "\r\n";
+            }
+            File.WriteAllText("Employee.txt", alldata, Encoding.GetEncoding(1251));
+            MessageBox.Show(@"Сформирован файл Employee.txt в текущем каталоге", @"Результаты", MessageBoxButtons.OK,
+                MessageBoxIcon.Information);
         }
     }
 }

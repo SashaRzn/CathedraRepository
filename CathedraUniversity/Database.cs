@@ -1,3 +1,4 @@
+using System.Security.Cryptography;
 using CathedraUniversity.Forms.Classes;
 using System;
 using System.Text;
@@ -219,6 +220,33 @@ namespace CathedraUniversity
 				
 			}
 		}
+
+	    public string EmployeeFactFio
+	    {
+	        get { return Employee1.ShortName; }
+	    }
+
+	    public string EmployeeFormFio
+	    {
+            get { return Employee.ShortName;  }
+	    }
+
+	    public bool FactFormDiffers
+	    {
+	        get
+	        {
+	            if (Employee != null && Employee1 != null)
+	                return Employee.Id != Employee1.Id;
+	            else
+	                return false;
+	        }
+	        set
+	        {
+	            
+	        }
+
+
+	    }
 	}
 
 
@@ -681,6 +709,212 @@ namespace CathedraUniversity
 			}
 		}
 
+        //private string GetHoursRow(decimal? AValue, string ADesc, CourseInWork ATwin)
+        //{
+        //    if (Utils.SafeDecimal(AValue) != 0)
+        //    {
+        //        string _rs = "";
+        //        _rs += ("                    " + ADesc + " - ").PadRight(40) + Utils.SafeDecimal(AValue).ToString();
+        //        if (ATwin != null)
+        //        {
+        //            if (ATwin.Fact == (short)WorkloadType.Формальная)
+        //                _rs += " (формально " + ATwin.Employee.ShortName.Trim() + ")";
+        //            else if (ATwin.Fact == (short)WorkloadType.Фактическая)
+        //                _rs += " (фактически " + ATwin.Employee.ShortName.Trim() + ")";
+        //        }
+        //        _rs += "\n";
+        //        return _rs;
+        //    }
+        //    else
+        //        return "";
+        //}
+
+        public string GetEmployeeInfo(SchoolYear sy)
+        {
+            string returnString = "";
+
+            returnString += "=======================================================================\r\n";
+            returnString += "Данные по состоянию на " + DateTime.Now.ToString("dd MMM yyyy HH:mm:ss") + "\r\n";
+            returnString += "=======================================================================\r\n";
+            returnString += ("ФИО: ").PadRight(40) + Fio + "\r\n";
+            returnString += ("Должность: ").PadRight(40) + Post.Name + "\r\n";
+            returnString += ("Учебный год: ").PadRight(40) + sy.Years + "\r\n";
+            returnString += ("Ставка по коммерческому набору: ").PadRight(40) + this.RateForm + "\r\n";
+            returnString += ("Часов нагрузки согласно ставке:").PadRight(40) + this.RateInHours + "\r\n";
+            returnString += "\r\n";
+
+            #region Формальная нагрузка
+            returnString += "============================================================\r\n";
+
+            //var q = (from lf in this.LoadInCourseFact
+            //    where lf.CourseInWork.SchoolYearID == sy.ID
+            //    group lf by CourseInWork
+            //    into grouping
+            //    orderby grouping.Key. Course.Name
+            //    select grouping);                
+
+
+            var q = from licf in this.LoadInCourseFact
+                where licf.CourseInWork.SchoolYearID == sy.ID
+                group licf by new { licf.CourseInWorkID, licf.CourseInWork }
+                into grouping
+                orderby grouping.Key.CourseInWork.Semestr, grouping.Key.CourseInWorkID, grouping.Key.CourseInWork.Groups
+                select grouping;
+
+            short semestr = 0;
+            decimal itogoSemestr = 0;
+            decimal itogo = 0;
+            foreach (var course in q)
+            {
+                if (semestr != course.Key.CourseInWork.Semestr)
+                {
+                    if (semestr == (short)Semestr.Осенний)
+                    {
+                        returnString += ("Итого по семестру:").PadRight(40) + itogoSemestr + "\r\n";
+                        itogoSemestr = 0;
+                    }
+                    semestr = (short)course.Key.CourseInWork.Semestr;
+                    returnString += "\r\n" + ((Semestr)semestr).ToString() + " семестр\r\n";
+                }
+                returnString += course.Key.CourseInWork.Course.Name + ", гр." + course.Key.CourseInWork.Groups + "\r\n";
+                foreach (LoadInCourseFact licf in course.Key.CourseInWork.LoadInCourseFact.Where(p => p.EmployeeFormID == Id))
+                {
+                    string addstr = "";
+                    // Проверяем, кто является владельцем курса
+                    if (licf.CourseInWork.Employee != null && Id != licf.CourseInWork.Employee.Id)
+                        addstr += "(ответственный - " + licf.CourseInWork.Employee.ShortName + ")";
+                    returnString += String.Format("                    {0} - {1} {2}\r\n",
+                        licf.SortLoadName, licf.CountHours, addstr);
+
+                    itogo += licf.CountHours;
+                    itogoSemestr += licf.CountHours;
+                }
+            }
+            returnString += ("Итого по семестру:").PadRight(40) + itogoSemestr + "\r\n";
+            returnString += ("ИТОГО:").PadRight(40) + itogo + "\r\n\r\n";
+            #endregion
+
+            #region Фактическая нагрузка
+            returnString += "============================================================\r\n";
+            returnString += "Дополнительная информация:\r\n";
+
+            var q2 = (from ciw in CourseInWork
+                where ciw.SchoolYearID == sy.ID
+                select ciw);
+            foreach (CourseInWork ciw in q2)
+            {
+                foreach (LoadInCourseFact licf in ciw.LoadInCourseFact)
+                {
+                    if (licf.EmployeeFormID != Id)
+                        returnString += String.Format("   {0}, {1}, {2}, {3} - {4} закреплена за {5}\r\n", 
+                            ciw.Course.Name,
+                            licf.SortLoadName,
+                            licf.CourseSemestr,
+                            licf.Groups,
+                            licf.CountHours,
+                            licf.EmployeeFormFio
+                            );
+                }
+            }
+
+            //q = from ciw in this.Employee.CourseInWork
+            //    where ciw.SchoolYear.ID == this.SchoolYear.ID &&
+            //        (ciw.Fact == (short?)WorkloadType.Фактическая || ciw.Fact == (short?)WorkloadType.Фактическая_и_формальная)
+            //    orderby ciw.Semestr, ciw.Course.ID, ciw.Group.Group1
+            //    group ciw by new { Semestr = ciw.Semestr, Course = ciw.Course, Group1 = ciw.Group, Group2 = ciw.Group2, Group3 = ciw.Group3, Group4 = ciw.Group4 };
+
+            //semestr = 0;
+            //itogoSemestr = 0;
+            //itogo = 0;
+            //foreach (var course in q)
+            //{
+            //    if (semestr != course.Key.Semestr)
+            //    {
+            //        if (semestr == (short)Semestr.Осенний)
+            //        {
+            //            returnString += ("Итого по семестру:").PadRight(40) + itogoSemestr.ToString() + "\n";
+            //            itogoSemestr = 0;
+            //        }
+            //        semestr = (short)course.Key.Semestr;
+            //        returnString += "\n" + ((Semestr)semestr).ToString() + " семестр\n";
+            //    }
+            //    string group = "";
+            //    if (course.Key.Group1 != null) group += course.Key.Group1.Group1;
+            //    if (course.Key.Group2 != null) group += "," + course.Key.Group2.Group1;
+            //    returnString += course.Key.Course.Name + ", гр." + group + "\n";
+            //    foreach (CourseInWork ciw in course)
+            //    {
+            //        returnString += GetHoursRow(ciw.LectHours, "лекции", ciw.GetTwin(CoursesToFind));
+            //        returnString += GetHoursRow(ciw.KonsHours, "консультации", ciw.GetTwin(CoursesToFind));
+            //        returnString += GetHoursRow(ciw.ZachHours, "зачет", ciw.GetTwin(CoursesToFind));
+            //        returnString += GetHoursRow(ciw.EkzHours, "экзамен", ciw.GetTwin(CoursesToFind));
+            //        returnString += GetHoursRow(ciw.IzHours, "ИЗ", ciw.GetTwin(CoursesToFind));
+            //        returnString += GetHoursRow(ciw.UprHours, "упражнения", ciw.GetTwin(CoursesToFind));
+            //        returnString += GetHoursRow(ciw.LabHours, "лаб.раб.", ciw.GetTwin(CoursesToFind));
+            //        returnString += GetHoursRow(ciw.KontrRabHours, "контр.раб.", ciw.GetTwin(CoursesToFind));
+            //        returnString += GetHoursRow(ciw.KrHours, "КР", ciw.GetTwin(CoursesToFind));
+            //        returnString += GetHoursRow(ciw.KpHours, "КП", ciw.GetTwin(CoursesToFind));
+            //        returnString += GetHoursRow(ciw.ProchHours, "", ciw.GetTwin(CoursesToFind));
+
+            //        itogo += ciw.AllHours;
+            //        itogoSemestr += ciw.AllHours;
+            //    }
+            //}
+            //returnString += ("Итого по семестру:").PadRight(40) + itogoSemestr.ToString() + "\n";
+            //returnString += ("ИТОГО:").PadRight(40) + itogo.ToString() + "\n\n";
+            #endregion
+
+            #region Фактическая нагрузка, оплата из фондов
+            //returnString += "============================================================\n";
+            //returnString += "Фактическая нагрузка с оплатой из фондов:\n";
+            //q = from ciw in this.Employee.CourseInWork
+            //    where ciw.SchoolYear.ID == this.SchoolYear.ID &&
+            //        (ciw.Fact == (short?)WorkloadType.Фактическая)
+            //    orderby ciw.Semestr, ciw.Course.ID, ciw.Group.Group1
+            //    group ciw by new { Semestr = ciw.Semestr, Course = ciw.Course, Group1 = ciw.Group, Group2 = ciw.Group2, Group3 = ciw.Group3, Group4 = ciw.Group4 };
+
+            ////  select ciw).ToList<CourseInWork>();
+
+            //foreach (var course in q)
+            //{
+            //    if (semestr != course.Key.Semestr)
+            //    {
+            //        if (semestr == (short)Semestr.Осенний)
+            //        {
+            //            returnString += ("Итого по семестру:").PadRight(40) + itogoSemestr.ToString() + "\n";
+            //            itogoSemestr = 0;
+            //        }
+            //        semestr = (short)course.Key.Semestr;
+            //        returnString += "\n" + ((Semestr)semestr).ToString() + " семестр\n";
+            //    }
+            //    string group = "";
+            //    if (course.Key.Group1 != null) group += course.Key.Group1.Group1;
+            //    if (course.Key.Group2 != null) group += "," + course.Key.Group2.Group1;
+            //    returnString += course.Key.Course.Name + ", гр." + group + "\n";
+            //    foreach (CourseInWork ciw in course)
+            //    {
+            //        returnString += getHoursRow(ciw.LectHours, "лекции");
+            //        returnString += getHoursRow(ciw.KonsHours, "консультации");
+            //        returnString += getHoursRow(ciw.ZachHours, "зачет");
+            //        returnString += getHoursRow(ciw.EkzHours, "экзамен");
+            //        returnString += getHoursRow(ciw.IzHours, "ИЗ");
+            //        returnString += getHoursRow(ciw.UprHours, "упражнения");
+            //        returnString += getHoursRow(ciw.LabHours, "лаб.раб.");
+            //        returnString += getHoursRow(ciw.KontrRabHours, "контр.раб.");
+            //        returnString += getHoursRow(ciw.KrHours, "КР");
+            //        returnString += getHoursRow(ciw.KpHours, "КП");
+            //        returnString += getHoursRow(ciw.ProchHours, "");
+
+            //        itogo += ciw.AllHours;
+            //        itogoSemestr += ciw.AllHours;
+            //    }
+            //}
+            //returnString += ("Итого по семестру:").PadRight(40) + itogoSemestr.ToString() + "\n";
+            //returnString += ("ИТОГО:").PadRight(40) + itogo.ToString() + "\n\n";
+            #endregion
+
+            return returnString;
+        }
 
 	}
 

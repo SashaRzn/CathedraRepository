@@ -45,7 +45,7 @@ namespace CathedraUniversity.Forms
             toolStripSchoolYear.SelectedIndex = 0;
             updateBindingSourceRate((SchoolYear)toolStripSchoolYear.Items[0]);
 
-            bsEmployee.DataSource = database.Employee;
+            bsEmployee.DataSource = database.Employee.Where(p => !p.NonActive);
             bsPost.DataSource = database.Post;
 
             this.WindowState = FormWindowState.Maximized;
@@ -109,6 +109,32 @@ namespace CathedraUniversity.Forms
                 totalBaseSalary + totalPostSalary + totalGradeSurcharge + totalPostSurcharge, totalPochFondLimit);
 
             MessageBox.Show(result);
+        }
+
+        private void ctlRate_CellParsing(object sender, DataGridViewCellParsingEventArgs e)
+        {
+            switch (e.DesiredType.FullName)
+            {
+                case "CathedraUniversity.Employee":
+                {
+                    var s = e.Value as string;
+                    Employee em = (from employee in this.bsEmployee.OfType<Employee>()
+                        where employee.ToString() == s
+                        select employee).FirstOrDefault();
+                    e.Value = em;
+                }
+                    break;
+                case "CathedraUniversity.Post":
+                {
+                    var s = e.Value as string;
+                    Post p = (from post in this.bsPost.OfType<Post>()
+                        where post.ToString() == s
+                        select post).FirstOrDefault();
+                    e.Value = p;
+                }
+                    break;
+            }
+            e.ParsingApplied = true;
         }
     }
 }
